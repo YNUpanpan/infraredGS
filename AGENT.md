@@ -87,3 +87,6 @@
 - 已验证 manifest 当前数据为 339 对完整可见光/红外图像。
 - 已验证 Git 没有跟踪原始图片、`.MRK`、点云、checkpoint 或大模型文件。
 - 已在分支 `codex/3dgs-repo-setup` 按任务分步提交。
+- 已将 `codex/3dgs-repo-setup` fast-forward 合并回 `master`。
+- 合并后重新验证：`pytest` 通过 4 个测试，manifest 为 339 对完整配对，Git 未跟踪原始图片或模型大文件。
+- 因项目规则禁止批量删除目录，保留 `.worktrees/codex-3dgs-repo-setup`，未自动清理 worktree 目录。
