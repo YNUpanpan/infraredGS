@@ -1,0 +1,9 @@
+visible:
+  source_path: ~/experiments/uav_3dgs/colmap_visible
+  model_path: ~/experiments/uav_3dgs/outputs/3dgs_visible
+  iterations: 30000
+
+thermal:
+  source_path: ~/experiments/uav_3dgs/colmap_thermal
+  model_path: ~/experiments/uav_3dgs/outputs/3dgs_thermal
+  iterations: 30000

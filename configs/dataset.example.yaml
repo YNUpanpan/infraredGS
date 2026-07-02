@@ -1,0 +1,9 @@
+project_root: ~/projects/uav-thermal-visible-3dgs
+dataset_root: ~/datasets/uav_3dgs
+experiment_root: ~/experiments/uav_3dgs
+
+raw:
+  visible: ~/datasets/uav_3dgs/raw/visible
+  thermal: ~/datasets/uav_3dgs/raw/thermal
+
+manifest: manifests/dataset_manifest.csv
