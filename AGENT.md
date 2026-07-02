@@ -1,33 +1,51 @@
-# Agent Work Log
+# Agent 工作日志
 
 ## 2026-07-02 Session 001
 
-### User Request
-- Plan a 3D Gaussian Splatting reconstruction workflow for 339 visible UAV images and 339 thermal UAV images.
-- Use a future RTX 5090 Ubuntu 22.04 server, but do not connect to or operate the server yet.
-- Record every conversation task in `AGENT.md`.
-- Eventually upload the project to GitHub, while keeping raw images out of the repository.
+### 用户需求
+- 为 339 张可见光无人机图像和 339 张红外无人机图像规划 3D Gaussian Splatting 三维重建流程。
+- 后续使用 RTX 5090、Ubuntu 22.04 服务器，但当前阶段暂不连接或操作服务器。
+- 每次对话任务都记录到 `AGENT.md`。
+- 后续上传到 GitHub，但原始图片不进入仓库。
 
-### Confirmed Decisions
-- GitHub will track documentation, scripts, configs, manifests, and logs only. Raw images will not be uploaded.
-- Reconstruction order: first run independent visible and thermal 3DGS workflows, then attempt visible-geometry plus thermal-registration fusion.
-- Initial deliverable: a reproducible local experiment repository design plus server runbook and script templates.
-- Server mode for now: prepare local repo and reproducible documentation only; do not directly operate the RTX 5090 server yet.
-- GitHub mode for now: initialize a local git repository first; configure a remote later.
-- Preferred repository style: reproducible experiment repository rather than a minimal notes repo or fully automated pipeline.
+### 已确认决策
+- GitHub 只跟踪文档、脚本、配置、manifest 和日志；原始图片不上传。
+- 重建顺序：先做可见光和红外的独立 3DGS 重建，再尝试“可见光几何 + 红外配准”的融合流程。
+- 初始交付物：可复现实验本地仓库设计、服务器 runbook、脚本模板。
+- 服务器使用方式：当前只准备本地仓库和可复现文档，不直接操作 RTX 5090 服务器。
+- GitHub 使用方式：先初始化本地 git 仓库，远端地址之后再配置。
+- 仓库风格：采用“可复现实验仓库”，不做极简笔记仓库，也暂不做全自动 pipeline。
 
-### Actions Taken
-- Inspected the working directory and confirmed it contains 339 `*_V.JPG` visible images and 339 `*_T.JPG` thermal images.
-- Confirmed the working directory was not yet a git repository.
-- Confirmed no existing `AGENT.md` or `AGENTS.md` file was present in the workspace.
-- Drafted and confirmed the high-level design in five sections:
-  - Repository and data boundary.
-  - Independent visible/thermal reconstruction workflow.
-  - Later visible-geometry plus thermal-registration fusion workflow.
-  - `AGENT.md`, local git, and later GitHub publishing workflow.
-  - RTX 5090 Ubuntu 22.04 server runbook and script-template scope.
+### 已完成动作
+- 检查工作目录，确认包含 339 个 `*_V.JPG` 可见光文件和 339 个 `*_T.JPG` 红外文件。
+- 确认工作目录最初还不是 git 仓库。
+- 确认工作区最初没有 `AGENT.md` 或 `AGENTS.md` 文件。
+- 按五个部分起草并确认高层设计：
+  - 仓库与数据边界。
+  - 可见光/红外独立重建流程。
+  - 后续“可见光几何 + 红外配准”融合流程。
+  - `AGENT.md`、本地 git 与后续 GitHub 发布流程。
+  - RTX 5090、Ubuntu 22.04 服务器 runbook 和脚本模板范围。
+- 写入设计文档 `docs/superpowers/specs/2026-07-02-3dgs-reconstruction-design.md`。
+- 初始化本地 git 仓库，并提交 `AGENT.md` 与设计文档。
 
-### Next Steps
-- Write the approved design spec under `docs/superpowers/specs/`.
-- Commit the design spec and this work log to local git.
-- Ask the user to review the written spec before moving to the implementation plan.
+### 下一步
+- 用户 review 已写入的设计 spec。
+- 用户确认后，进入 implementation plan，规划 `.gitignore`、`README.md`、server runbook、脚本模板和 manifest 生成器。
+
+## 2026-07-02 Session 002
+
+### 用户需求
+- 以后 `AGENTS.md` 和其他所有 `.md` 文件默认使用中文书写，除非是特定英文、命令、路径、文件名或专有技术名词。
+
+### 已确认决策
+- 项目 Markdown 文档默认使用中文。
+- 保留必要英文：例如 `3DGS`、`COLMAP`、`GitHub`、`README.md`、命令、路径、配置键和文件名。
+
+### 已完成动作
+- 将既有 `AGENT.md` 转为中文。
+- 将既有 3DGS reconstruction design spec 转为中文。
+- 新增 `AGENTS.md`，记录项目级协作与文档语言规范。
+
+### 下一步
+- 提交中文化后的 Markdown 文档。
