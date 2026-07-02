@@ -685,7 +685,7 @@ git ls-files "*.JPG" "*.jpg" "*.MRK" "*.ply" "*.pt" "*.pth" "*.ckpt"
 Run:
 
 ```powershell
-rg -n "占位内容|未补全|英文旧标题" docs AGENT.md AGENTS.md README.md
+rg -n "占位内容|未补全|英文旧标题" AGENT.md AGENTS.md README.md docs --glob "!docs/superpowers/plans/**"
 ```
 
 Expected: exit 1 或无输出。
