@@ -163,3 +163,58 @@
 ### 下一步
 - 用户在本机执行上传命令。
 - 上传完成后在服务器运行 manifest 检查，确认 339 对图像完整。
+
+## 2026-07-02 Session 009
+
+### 用户需求
+- 上传图片命令执行失败，要求排查。
+
+### 问题原因
+- 用户在 Windows `cmd.exe` 中执行了 PowerShell 语法。
+- `cmd.exe` 不支持 `Get-ChildItem`、`ForEach-Object` 和 `$_.FullName`，导致 `scp` 收到字面量 `$_.FullName`，报 `No such file or directory`。
+
+### 已完成动作
+- 说明根因。
+- 提供 `cmd.exe` 专用上传命令和 PowerShell 正确打开方式。
+
+### 下一步
+- 用户选择在 `cmd.exe` 中运行 `for %f in (...) do scp ...`，或打开 PowerShell 后运行原 PowerShell 命令。
+
+## 2026-07-02 Session 010
+
+### 用户需求
+- 上传图片时每传一张都要输入一次服务器密码，太麻烦。
+
+### 问题原因
+- PowerShell 循环中每张图片单独执行一次 `scp`，每次都会建立新的 SSH 连接，因此每张都要求输入密码。
+
+### 已完成动作
+- 建议改用 tar/压缩包方式：本地打包可见光和红外图片，各上传一次，再在服务器解包。
+- 提供 SSH key 免密作为后续优化方案。
+
+### 下一步
+- 用户使用打包上传方案，上传完成后在服务器检查可见光和红外图片数量是否均为 339。
+
+## 2026-07-02 Session 011
+
+### 用户需求
+- 用户确认图片上传已成功，可见光和红外图片数量均为 339，要求进入下一步。
+
+### 已确认状态
+- 本地原始数据仍保持 339 张 `*_V.JPG` 和 339 张 `*_T.JPG`。
+- 服务器侧用户已确认两个目录图片数量均为 339。
+
+### 已完成动作
+- 扩展 `scripts/prepare_dataset.py`，支持通过 `--visible-dir` 和 `--thermal-dir` 分别读取可见光与红外图片目录。
+- 新增对应测试，覆盖可见光和红外图片分目录存放时的 manifest 生成逻辑。
+- 更新 `docs/server-runbook.md`，将下一步服务器命令改为分目录生成 `manifests/dataset_manifest.csv`。
+- 更新 `.gitignore`，忽略本地上传用归档文件，例如 `*.tar`、`*.tar.gz`、`*.zip` 和 `*.7z`。
+
+### 验证结果
+- `pytest tests/test_prepare_dataset.py -q` 通过 5 个测试。
+- 使用本地 339+339 张图片运行分目录 manifest 生成，输出 `manifest rows: 339` 和 `complete pairs: 339`。
+- Git 未跟踪原始图片、`.MRK`、归档包、点云或 checkpoint 大文件。
+
+### 下一步
+- 用户在服务器仓库中执行 `git pull`。
+- 运行分目录 manifest 检查命令，确认服务器生成结果同样为 `manifest rows: 339` 和 `complete pairs: 339`。

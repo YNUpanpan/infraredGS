@@ -102,11 +102,14 @@ cd /home/pch/myGS/infraredGS
 
 如果先把 678 张图片传到同一个临时目录，例如 `/home/pch/myGS/datasets/uav_3dgs/raw/all/`，先运行 manifest 检查，不要批量删除或覆盖文件。
 
-生成 manifest：
+如果可见光和红外已经分开放在 `visible/` 与 `thermal/` 目录，生成 manifest：
 
 ```bash
+cd /home/pch/myGS/infraredGS
+
 python scripts/prepare_dataset.py \
-  --input /path/to/raw/images \
+  --visible-dir /home/pch/myGS/datasets/uav_3dgs/raw/visible \
+  --thermal-dir /home/pch/myGS/datasets/uav_3dgs/raw/thermal \
   --output manifests/dataset_manifest.csv
 ```
 
@@ -115,6 +118,14 @@ python scripts/prepare_dataset.py \
 ```text
 manifest rows: 339
 complete pairs: 339
+```
+
+如果 678 张图片暂时放在同一个目录，也可以使用旧写法：
+
+```bash
+python scripts/prepare_dataset.py \
+  --input /path/to/raw/images \
+  --output manifests/dataset_manifest.csv
 ```
 
 ## 执行顺序

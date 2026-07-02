@@ -1,7 +1,7 @@
 import csv
 from pathlib import Path
 
-from scripts.prepare_dataset import build_manifest, write_manifest
+from scripts.prepare_dataset import build_manifest, build_manifest_from_dirs, write_manifest
 
 
 def touch(path: Path) -> None:
@@ -50,6 +50,26 @@ def test_build_manifest_ignores_non_target_files(tmp_path):
 
     assert len(rows) == 1
     assert rows[0]["sequence_id"] == "0400"
+
+
+def test_build_manifest_from_separate_visible_and_thermal_dirs(tmp_path):
+    visible_dir = tmp_path / "visible"
+    thermal_dir = tmp_path / "thermal"
+    touch(visible_dir / "DJI_20260602140225_0400_V.JPG")
+    touch(thermal_dir / "DJI_20260602140225_0400_T.JPG")
+
+    rows = build_manifest_from_dirs(visible_dir, thermal_dir)
+
+    assert rows == [
+        {
+            "sequence_id": "0400",
+            "visible_filename": "DJI_20260602140225_0400_V.JPG",
+            "thermal_filename": "DJI_20260602140225_0400_T.JPG",
+            "visible_exists": "yes",
+            "thermal_exists": "yes",
+            "notes": "",
+        }
+    ]
 
 
 def test_write_manifest_outputs_csv(tmp_path):

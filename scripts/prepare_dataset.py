@@ -36,8 +36,25 @@ def scan_images(root: Path) -> dict[str, dict[str, str]]:
     return pairs
 
 
-def build_manifest(root: Path) -> list[dict[str, str]]:
-    pairs = scan_images(root)
+def scan_images_by_kind(root: Path, expected_kind: str) -> dict[str, dict[str, str]]:
+    expected_kind = expected_kind.upper()
+    pairs: dict[str, dict[str, str]] = {}
+    for path in sorted(root.iterdir()):
+        if not path.is_file():
+            continue
+        match = IMAGE_PATTERN.search(path.name)
+        if match is None or match.group("kind").upper() != expected_kind:
+            continue
+        sequence = match.group("sequence")
+        pairs.setdefault(sequence, {})
+        if expected_kind == "V":
+            pairs[sequence]["visible"] = path.name
+        elif expected_kind == "T":
+            pairs[sequence]["thermal"] = path.name
+    return pairs
+
+
+def rows_from_pairs(pairs: dict[str, dict[str, str]]) -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
     for sequence in sorted(pairs):
         visible = pairs[sequence].get("visible", "")
@@ -60,6 +77,18 @@ def build_manifest(root: Path) -> list[dict[str, str]]:
     return rows
 
 
+def build_manifest(root: Path) -> list[dict[str, str]]:
+    return rows_from_pairs(scan_images(root))
+
+
+def build_manifest_from_dirs(visible_root: Path, thermal_root: Path) -> list[dict[str, str]]:
+    pairs = scan_images_by_kind(visible_root, "V")
+    thermal_pairs = scan_images_by_kind(thermal_root, "T")
+    for sequence, values in thermal_pairs.items():
+        pairs.setdefault(sequence, {}).update(values)
+    return rows_from_pairs(pairs)
+
+
 def write_manifest(rows: list[dict[str, str]], output: Path) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.open("w", encoding="utf-8", newline="") as handle:
@@ -71,6 +100,8 @@ def write_manifest(rows: list[dict[str, str]], output: Path) -> None:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="生成可见光/红外无人机图像 manifest。")
     parser.add_argument("--input", type=Path, default=Path("."), help="原始图片所在目录")
+    parser.add_argument("--visible-dir", type=Path, help="可见光图片目录")
+    parser.add_argument("--thermal-dir", type=Path, help="红外图片目录")
     parser.add_argument(
         "--output",
         type=Path,
@@ -82,7 +113,12 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    rows = build_manifest(args.input)
+    if args.visible_dir or args.thermal_dir:
+        if not args.visible_dir or not args.thermal_dir:
+            raise SystemExit("--visible-dir 和 --thermal-dir 必须同时提供。")
+        rows = build_manifest_from_dirs(args.visible_dir, args.thermal_dir)
+    else:
+        rows = build_manifest(args.input)
     write_manifest(rows, args.output)
     complete = sum(
         1

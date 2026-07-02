@@ -9,6 +9,12 @@
 *.raw
 *.MRK
 
+# 本地打包上传用归档文件，不进入 Git
+*.tar
+*.tar.gz
+*.zip
+*.7z
+
 # 本地或服务器数据目录
 data/raw/
 data/processed/
