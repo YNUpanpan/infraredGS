@@ -1,1 +1,35 @@
+# 原始无人机影像，不进入 Git
+*.JPG
+*.jpg
+*.JPEG
+*.jpeg
+*.png
+*.tif
+*.tiff
+*.raw
+*.MRK
+
+# 本地或服务器数据目录
+data/raw/
+data/processed/
+
+# COLMAP、3DGS 和实验输出
+work/
+outputs/
+experiments/
+*.db
+*.bin
+*.ply
+*.pt
+*.pth
+*.ckpt
+
+# Python 缓存与测试缓存
+__pycache__/
+.pytest_cache/
+*.pyc
+
+# 本地临时目录
+.superpowers/
+.git_template/
 .worktrees/
