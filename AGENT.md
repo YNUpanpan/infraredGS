@@ -90,3 +90,22 @@
 - 已将 `codex/3dgs-repo-setup` fast-forward 合并回 `master`。
 - 合并后重新验证：`pytest` 通过 4 个测试，manifest 为 339 对完整配对，Git 未跟踪原始图片或模型大文件。
 - 因项目规则禁止批量删除目录，保留 `.worktrees/codex-3dgs-repo-setup`，未自动清理 worktree 目录。
+
+## 2026-07-02 Session 005
+
+### 用户需求
+- 将本地仓库上传到 GitHub 远端 `git@github.com:YNUpanpan/infraredGS.git`。
+
+### 已确认决策
+- 使用 SSH remote `git@github.com:YNUpanpan/infraredGS.git` 作为 `origin`。
+- 上传前继续检查不跟踪原始图片、`.MRK`、点云、checkpoint 或模型大文件。
+- 未跟踪的 `migration_robocopy_20260629.log` 不纳入本次提交和上传。
+
+### 已完成动作
+- 检查当前分支为 `master`。
+- 检查当前尚未配置 Git remote。
+- 检查大文件跟踪清单为空。
+
+### 下一步
+- 提交本轮 `AGENT.md` 记录。
+- 配置 `origin` 并 push 到 GitHub。
