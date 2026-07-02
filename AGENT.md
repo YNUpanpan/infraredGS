@@ -114,3 +114,18 @@
 - 已添加 `origin`：`git@github.com:YNUpanpan/infraredGS.git`。
 - 上传前验证通过：`pytest` 通过 4 个测试，大文件跟踪清单为空。
 - 已执行 `git push -u origin master`，`master` 已推送到 GitHub 并跟踪 `origin/master`。
+
+## 2026-07-02 Session 006
+
+### 用户需求
+- 确认 GitHub 上传已成功，并要求进入下一步。
+
+### 已确认决策
+- 下一阶段进入服务器执行准备：确认 RTX 5090、Ubuntu 22.04 服务器环境与数据传输方式。
+- 继续保持原始图片不进入 GitHub。
+
+### 已完成动作
+- 确认仓库已成功推送到 `git@github.com:YNUpanpan/infraredGS.git`。
+
+### 下一步
+- 收集服务器连接方式、GPU/driver/CUDA 状态、数据存放路径和是否允许远程协助执行。
