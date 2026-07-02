@@ -4,6 +4,32 @@
 
 在 RTX 5090、Ubuntu 22.04 服务器上复现可见光和红外 3DGS 重建实验。当前仓库只提供文档、配置和脚本模板；真实执行前必须先检查服务器的 driver、CUDA、PyTorch 和 COLMAP 环境。
 
+## 已确认服务器信息
+
+当前服务器连接入口：
+
+```text
+pch@10.76.7.127
+```
+
+用户选择当前阶段采用 A 方案：只根据服务器信息继续完善命令手册，暂不由 Codex 通过 SSH 远程执行。
+
+已从截图确认的环境：
+
+```text
+NVIDIA-SMI: 570.144
+Driver Version: 570.144
+CUDA Version: 12.8
+GPU 0: NVIDIA GeForce RTX 5090, 32607 MiB
+GPU 1: NVIDIA GeForce RTX 5090, 32607 MiB
+nvcc: release 12.8, V12.8.61
+git: 2.34.1
+conda: 24.1.2
+/dev/nvme0n1p2: 3.6T total, 797G available, 78% used
+```
+
+结论：GPU、driver、CUDA compiler、git、conda 都可用；磁盘剩余约 797G，足够先进行本批 678 张图像的 COLMAP 与 3DGS 基线实验，但训练输出和中间结果仍应定期归档。
+
 ## 环境检查
 
 登录服务器后先运行：
@@ -28,23 +54,53 @@ df -h
 
 ## 推荐目录
 
+本项目在该服务器上统一放到 `/home/pch/myGS` 下：
+
 ```text
-~/projects/uav-thermal-visible-3dgs/
-~/datasets/uav_3dgs/raw/visible/
-~/datasets/uav_3dgs/raw/thermal/
-~/experiments/uav_3dgs/
+/home/pch/myGS/infraredGS/
+/home/pch/myGS/datasets/uav_3dgs/raw/visible/
+/home/pch/myGS/datasets/uav_3dgs/raw/thermal/
+/home/pch/myGS/experiments/uav_3dgs/
+/home/pch/myGS/src/
 ```
 
 含义：
 
-- `~/projects/uav-thermal-visible-3dgs/`：Git 仓库。
-- `~/datasets/uav_3dgs/raw/visible/`：可见光原始图片。
-- `~/datasets/uav_3dgs/raw/thermal/`：红外原始图片。
-- `~/experiments/uav_3dgs/`：COLMAP、3DGS 和报告输出。
+- `/home/pch/myGS/infraredGS/`：本 Git 仓库。
+- `/home/pch/myGS/datasets/uav_3dgs/raw/visible/`：可见光原始图片。
+- `/home/pch/myGS/datasets/uav_3dgs/raw/thermal/`：红外原始图片。
+- `/home/pch/myGS/experiments/uav_3dgs/`：COLMAP、3DGS 和报告输出。
+- `/home/pch/myGS/src/`：第三方源码，例如官方 Gaussian Splatting 仓库或 COLMAP 源码。
+
+创建目录：
+
+```bash
+mkdir -p /home/pch/myGS/datasets/uav_3dgs/raw/visible
+mkdir -p /home/pch/myGS/datasets/uav_3dgs/raw/thermal
+mkdir -p /home/pch/myGS/experiments/uav_3dgs
+mkdir -p /home/pch/myGS/src
+```
+
+克隆本仓库：
+
+```bash
+cd /home/pch/myGS
+git clone git@github.com:YNUpanpan/infraredGS.git
+cd /home/pch/myGS/infraredGS
+```
 
 ## 数据准备
 
 原始图片不进入 Git。建议把 `*_V.JPG` 放入 `raw/visible/`，把 `*_T.JPG` 放入 `raw/thermal/`。如果暂时保留在同一目录，也可以先用 `scripts/prepare_dataset.py` 生成 manifest 检查配对关系。
+
+推荐数据目录：
+
+```text
+/home/pch/myGS/datasets/uav_3dgs/raw/visible/
+/home/pch/myGS/datasets/uav_3dgs/raw/thermal/
+```
+
+如果先把 678 张图片传到同一个临时目录，例如 `/home/pch/myGS/datasets/uav_3dgs/raw/all/`，先运行 manifest 检查，不要批量删除或覆盖文件。
 
 生成 manifest：
 
@@ -75,8 +131,11 @@ complete pairs: 339
 ## B 阶段命令模板
 
 ```bash
-export DATASET_ROOT="$HOME/datasets/uav_3dgs"
-export EXPERIMENT_ROOT="$HOME/experiments/uav_3dgs"
+cd /home/pch/myGS/infraredGS
+
+export DATASET_ROOT="/home/pch/myGS/datasets/uav_3dgs"
+export EXPERIMENT_ROOT="/home/pch/myGS/experiments/uav_3dgs"
+export GAUSSIAN_REPO="/home/pch/myGS/src/gaussian-splatting"
 
 bash scripts/run_colmap_visible.sh
 bash scripts/train_3dgs_visible.sh
@@ -86,6 +145,15 @@ bash scripts/train_3dgs_thermal.sh
 ```
 
 如果红外 COLMAP 失败，应先保存日志和失败原因，不要强行训练红外 3DGS。
+
+双 GPU 使用建议：
+
+```bash
+CUDA_VISIBLE_DEVICES=0 bash scripts/train_3dgs_visible.sh
+CUDA_VISIBLE_DEVICES=1 bash scripts/train_3dgs_thermal.sh
+```
+
+先不要同时启动两个长训练任务。建议先跑可见光基线，确认 COLMAP 和 3DGS 输出正常后，再跑红外基线。
 
 ## 结果归档
 
