@@ -128,6 +128,33 @@ python scripts/prepare_dataset.py \
   --output manifests/dataset_manifest.csv
 ```
 
+## 第三方源码准备
+
+本仓库的 3DGS 训练脚本默认依赖官方 `gaussian-splatting` 仓库，并通过 `GAUSSIAN_REPO` 指向源码目录。服务器当前推荐放在：
+
+```text
+/home/pch/myGS/src/gaussian-splatting
+```
+
+如果该目录不存在，先克隆官方源码。官方仓库包含子模块，因此使用 `--recursive`：
+
+```bash
+cd /home/pch/myGS/src
+git clone --recursive https://github.com/graphdeco-inria/gaussian-splatting.git
+
+ls -lah /home/pch/myGS/src/gaussian-splatting
+ls -lah /home/pch/myGS/src/gaussian-splatting/train.py
+```
+
+如果网络中断或子模块没有拉完整，进入仓库后补拉子模块：
+
+```bash
+cd /home/pch/myGS/src/gaussian-splatting
+git submodule update --init --recursive
+```
+
+暂时不要删除 `/home/pch/myGS/src` 下已有目录；如果已有同名目录但内容不完整，先截图或输出 `git status` 后再决定如何处理。
+
 ## 执行顺序
 
 1. 克隆或同步本仓库。

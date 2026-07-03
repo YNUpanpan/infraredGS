@@ -278,3 +278,24 @@
 - 用户在服务器执行 `git pull --ff-only`。
 - 同步后再次运行 `git status` 确认只剩 `manifests/dataset_manifest.csv` 的本地修改。
 - 不提交服务器生成的 manifest，继续进入可见光 COLMAP 基线前检查。
+
+## 2026-07-03 Session 015
+
+### 用户需求
+- 用户提供服务器执行 `git pull --ff-only`、`git status` 和 `ls` 检查截图，要求继续推进。
+
+### 已确认状态
+- 服务器 `git pull --ff-only` 已成功，`master` 已同步到 `origin/master`。
+- 服务器工作区仍只有 `manifests/dataset_manifest.csv` 是本地未暂存修改，这是生成的 manifest 结果，继续保留。
+- `/home/pch/myGS/src` 目录存在，但 `/home/pch/myGS/src/gaussian-splatting` 不存在。
+- 当前阻塞点是官方 `gaussian-splatting` 源码尚未放到服务器指定目录，训练脚本暂时不能运行。
+
+### 已完成动作
+- 更新 `docs/server-runbook.md`，新增“第三方源码准备”小节。
+- 明确官方 `gaussian-splatting` 源码推荐路径为 `/home/pch/myGS/src/gaussian-splatting`。
+- 记录克隆源码时需要使用 `git clone --recursive`，并补充子模块检查命令。
+
+### 下一步
+- 用户在服务器克隆官方 `gaussian-splatting` 仓库。
+- 克隆完成后检查 `train.py` 是否存在。
+- 下一轮继续确认 conda/PyTorch/CUDA 扩展依赖，再进入可见光 COLMAP 和 3DGS 基线。
