@@ -323,3 +323,21 @@
 - 用户在服务器先执行 GitHub 网络诊断。
 - 如果网络可用，使用浅克隆命令重试。
 - 如果仍超时，再考虑换网络、配置代理或从本机下载后上传源码包到服务器。
+
+## 2026-07-03 Session 017
+
+### 用户需求
+- 用户提供服务器重新克隆官方 `gaussian-splatting` 的成功截图，要求继续推进。
+
+### 已确认状态
+- 服务器已成功执行浅克隆命令，官方 `gaussian-splatting` 仓库位于 `/home/pch/myGS/src/gaussian-splatting`。
+- 截图显示主仓库和子模块已拉取，包括 `submodules/diff-gaussian-rasterization`、`submodules/simple-knn` 和 `submodules/fused-ssim`。
+- `/home/pch/myGS/src/gaussian-splatting/train.py` 已存在。
+
+### 问题判断
+- “3DGS 源码缺失”问题已解除。
+- 下一阶段不能直接训练，需要先确认 conda 环境、PyTorch 版本、CUDA 可用性以及源码扩展能否被当前 RTX 5090 环境编译或导入。
+
+### 下一步
+- 用户在服务器检查候选 conda 环境中的 Python、PyTorch、CUDA 和 GPU 可见性。
+- 根据检查结果决定使用现有环境，或新建专用 3DGS 环境。
