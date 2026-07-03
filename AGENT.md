@@ -218,3 +218,22 @@
 ### 下一步
 - 用户在服务器仓库中执行 `git pull`。
 - 运行分目录 manifest 检查命令，确认服务器生成结果同样为 `manifest rows: 339` 和 `complete pairs: 339`。
+
+## 2026-07-03 Session 012
+
+### 用户需求
+- 用户提供服务器 `head -5 manifests/dataset_manifest.csv` 截图，要求根据当前结果继续推进。
+
+### 已确认状态
+- 服务器当前目录为 `/home/pch/myGS/infraredGS`。
+- `manifests/dataset_manifest.csv` 已生成。
+- 截图显示前几行 `sequence_id`、`visible_filename`、`thermal_filename`、`visible_exists`、`thermal_exists`、`notes` 字段正常。
+- `0400`、`0401`、`0402`、`0403` 等样例行均显示 `visible_exists=yes` 且 `thermal_exists=yes`。
+
+### 已完成动作
+- 确认 manifest 首行和样例配对结果符合预期。
+- 判断下一阶段可以进入服务器环境依赖确认与 COLMAP/3DGS 准备。
+
+### 下一步
+- 先在服务器确认当前仓库脚本、第三方源码目录、conda 环境和 COLMAP 是否已经准备好。
+- 如果 COLMAP 或 3DGS 依赖尚未安装，下一轮优先补充安装命令和可复现记录。
