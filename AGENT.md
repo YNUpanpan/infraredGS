@@ -257,3 +257,24 @@
 ### 下一步
 - 让用户在服务器执行非破坏性的 Git 诊断命令，确认本地领先/落后提交和工作区状态。
 - 根据诊断结果选择 `merge`、`rebase` 或保留服务器本地提交后再同步。
+
+## 2026-07-03 Session 014
+
+### 用户需求
+- 用户提供服务器 Git 诊断截图，要求判断下一步操作。
+
+### 已确认状态
+- 服务器仓库位于 `/home/pch/myGS/infraredGS`，当前分支为 `master`。
+- 服务器本地 `master` 落后 `origin/master` 1 个提交，可以 fast-forward。
+- 截图没有显示服务器本地存在领先于远程的提交。
+- 工作区存在一个未暂存修改：`manifests/dataset_manifest.csv`。
+- 该修改来自服务器生成的 manifest 结果，应保留，不应删除或覆盖。
+
+### 问题判断
+- 之前 `git pull` 提示分叉，是因为未指定 pull 策略且远程状态未完全同步；本次诊断显示当前实际情况可以使用 fast-forward 同步。
+- 由于远程提交主要是 `AGENT.md` 记录更新，不涉及 `manifests/dataset_manifest.csv`，可以在保留 manifest 文件的情况下执行 `git pull --ff-only`。
+
+### 下一步
+- 用户在服务器执行 `git pull --ff-only`。
+- 同步后再次运行 `git status` 确认只剩 `manifests/dataset_manifest.csv` 的本地修改。
+- 不提交服务器生成的 manifest，继续进入可见光 COLMAP 基线前检查。
