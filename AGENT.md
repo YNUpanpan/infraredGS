@@ -299,3 +299,27 @@
 - 用户在服务器克隆官方 `gaussian-splatting` 仓库。
 - 克隆完成后检查 `train.py` 是否存在。
 - 下一轮继续确认 conda/PyTorch/CUDA 扩展依赖，再进入可见光 COLMAP 和 3DGS 基线。
+
+## 2026-07-03 Session 016
+
+### 用户需求
+- 用户提供服务器克隆官方 `gaussian-splatting` 失败截图，要求继续处理。
+
+### 已确认状态
+- 服务器已成功 `git pull --ff-only` 到最新仓库版本。
+- 克隆 `/home/pch/myGS/src/gaussian-splatting` 时失败。
+- 报错为 `Failed to connect to github.com port 443 ... Connection timed out`。
+- `ls` 检查确认 `/home/pch/myGS/src/gaussian-splatting` 和 `train.py` 仍不存在。
+
+### 问题判断
+- 当前问题不是路径或 Git 命令写错，而是服务器访问 GitHub HTTPS 时连接超时。
+- 由于官方仓库包含子模块，完整克隆对网络更敏感，下一步应优先使用浅克隆并检查网络连通性。
+
+### 已完成动作
+- 更新 `docs/server-runbook.md`，将官方 `gaussian-splatting` 克隆命令改为 `--depth 1 --recursive --shallow-submodules`。
+- 增加 `ping -c 4 github.com` 和 `curl -I https://github.com` 作为服务器网络诊断命令。
+
+### 下一步
+- 用户在服务器先执行 GitHub 网络诊断。
+- 如果网络可用，使用浅克隆命令重试。
+- 如果仍超时，再考虑换网络、配置代理或从本机下载后上传源码包到服务器。

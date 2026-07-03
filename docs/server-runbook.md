@@ -136,17 +136,24 @@ python scripts/prepare_dataset.py \
 /home/pch/myGS/src/gaussian-splatting
 ```
 
-如果该目录不存在，先克隆官方源码。官方仓库包含子模块，因此使用 `--recursive`：
+如果该目录不存在，先克隆官方源码。官方仓库包含子模块，因此使用 `--recursive`。服务器访问 GitHub 不稳定时，优先使用浅克隆，减少传输量：
 
 ```bash
 cd /home/pch/myGS/src
-git clone --recursive https://github.com/graphdeco-inria/gaussian-splatting.git
+git clone --depth 1 --recursive --shallow-submodules https://github.com/graphdeco-inria/gaussian-splatting.git
 
 ls -lah /home/pch/myGS/src/gaussian-splatting
 ls -lah /home/pch/myGS/src/gaussian-splatting/train.py
 ```
 
-如果网络中断或子模块没有拉完整，进入仓库后补拉子模块：
+如果克隆时报 `Failed to connect to github.com port 443` 或 `Connection timed out`，先做网络诊断：
+
+```bash
+ping -c 4 github.com
+curl -I https://github.com
+```
+
+如果网络诊断偶发失败，稍后重试浅克隆命令。若主仓库已经克隆成功但子模块没有拉完整，进入仓库后补拉子模块：
 
 ```bash
 cd /home/pch/myGS/src/gaussian-splatting
