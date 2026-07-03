@@ -341,3 +341,23 @@
 ### 下一步
 - 用户在服务器检查候选 conda 环境中的 Python、PyTorch、CUDA 和 GPU 可见性。
 - 根据检查结果决定使用现有环境，或新建专用 3DGS 环境。
+
+## 2026-07-03 Session 018
+
+### 用户需求
+- 用户指出当前推进思路有偏差：目标是三维重建，COLMAP 尚未执行，不应继续纠结已有环境；3DGS 应新建专用环境。
+- 用户要求重新总体思考：已经做了什么，接下来要做什么。
+
+### 纠偏结论
+- 用户判断正确：当前还没有运行 COLMAP，因此不能把工作重点提前放到训练环境细节上。
+- `ntrgs` 环境缺少 `torch`，不应继续尝试复用；后续应新建专用 conda 环境，例如 `gaussian_splatting`。
+- 当前阶段应回到主线：先跑可见光 COLMAP，确认 SfM 稀疏重建输出，再准备 3DGS 环境和训练。
+
+### 已完成动作
+- 新增执行计划 `docs/superpowers/plans/2026-07-03-server-colmap-3dgs-execution.md`。
+- 计划中明确已完成项、未完成项和后续阶段顺序。
+- 后续顺序调整为：服务器同步与数据确认、可见光 COLMAP、新建 3DGS 环境、可见光 3DGS、红外 COLMAP/3DGS、C 阶段融合。
+
+### 下一步
+- 用户在服务器先执行可见光 COLMAP 命令。
+- 可见光 COLMAP 输出存在 `database.db` 和 `sparse` 模型后，再进入新建 `gaussian_splatting` conda 环境。
