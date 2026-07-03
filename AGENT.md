@@ -237,3 +237,23 @@
 ### 下一步
 - 先在服务器确认当前仓库脚本、第三方源码目录、conda 环境和 COLMAP 是否已经准备好。
 - 如果 COLMAP 或 3DGS 依赖尚未安装，下一轮优先补充安装命令和可复现记录。
+
+## 2026-07-03 Session 013
+
+### 用户需求
+- 用户提供服务器环境检查截图，要求根据结果继续推进。
+
+### 已确认状态
+- 服务器执行 `git pull` 时提示本地分支和远程分支已经分叉，需要明确合并策略。
+- `COLMAP` 位于 `/usr/bin/colmap`，版本为 `COLMAP 3.7`，并显示 `without CUDA`。
+- 服务器 conda 环境包括 `base`、`UAVmatch`、`myenv`、`ntrgs`、`ntrgsE`。
+- `/home/pch/myGS/src` 当前只看到 `pch` 目录，尚未从截图确认官方 `gaussian-splatting` 源码是否存在。
+- 仓库 `scripts` 目录包含 `archive_results.sh`、`prepare_dataset.py`、`run_colmap_visible.sh`、`run_colmap_thermal.sh`、`train_3dgs_visible.sh`、`train_3dgs_thermal.sh`。
+
+### 问题判断
+- `git pull` 失败的根因是服务器本地仓库与 GitHub 仓库存在不同提交，不能直接覆盖或删除，需要先查看差异。
+- 当前系统 COLMAP 可用但不带 CUDA，后续可以先用于小规模验证；若速度或 GPU SIFT/MVS 成为瓶颈，再安装或编译 CUDA 版 COLMAP。
+
+### 下一步
+- 让用户在服务器执行非破坏性的 Git 诊断命令，确认本地领先/落后提交和工作区状态。
+- 根据诊断结果选择 `merge`、`rebase` 或保留服务器本地提交后再同步。
